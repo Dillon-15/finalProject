@@ -1,0 +1,40 @@
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+.custom-div{
+    margin: 5px auto 5px auto;
+    padding: 5px auto 5px auto;
+}
+
+.disc{
+    /* margin: auto auto auto 50px; */
+    margin-bottom: 80px;
+}
+.myButton{
+    margin: 5px 5px 5px 10px;
+    position: absolute;
+    bottom: 10px;
+    left: -12px;
+}
+.custom-input{
+    text-align: center;
+    width: 95%;
+    height: 45px;
+    display: block;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+
+    appearance: none;
+    border-radius: .375rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
