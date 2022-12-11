@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!--
+        Code By Dillon Barnett
+        Vue Movie Tickets / Final Project 
+    -->
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,18 +25,48 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
 
     <link rel="stylesheet" href="styles.css">
+
+    
 </head>
 <body>
+    <!-- The main div that vue looks for -->
     <div id="app">
+        <!-- The vue component that makes the navbar -->
         <navbar></navbar>
-        <sidebar v-bind:msg="msg" v-bind:ticket="ticketObj" aria-hidden="true"></sidebar>
-        <div class="container">
+        <!-- The vue component that makes side bar and fills it when updated -->
+        <sidebar v-bind:msg="msg" v-bind:ticket="ticketObj" v-bind:total="totalnum" aria-hidden="true"></sidebar>
+        <!-- div with the class container to center everything and make margins -->
+        <div class="container"> 
             <div class="row row-cols-1 row-cols-md-2 g-4 text-center">
+                <!-- The vue component that makes a movie card for every movie in the array -->
                 <movieCard class="col mx-3" v-for="movie in movies" v-bind:key="movie.id" v-bind:movies="movie"></moviecard>
             </div>
         </div>
+        <!-- A button that scrolls to the top if the page -->
+        <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button> 
     </div>
 
     <script src="apps.js"></script>
+    <script>
+        // Get the button:
+        let mybutton = document.getElementById("myBtn");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        }
+    </script>
 </body>
 </html>
