@@ -63,8 +63,8 @@ Vue.component('sidebar',{
 
                         <tr v-for="tot in total">
                             <th>Total:</th>
-                            <td>{{tot.adult}}</td>
-                            <td>{{tot.child}}</td>
+                            <td id="adult">{{tot.adult}}</td>
+                            <td id="child">{{tot.child}}</td>
                             <td>{{tot.total}}</td>
                         </tr>
                         </table> 
@@ -120,49 +120,12 @@ Vue.component('moviecard',{
             img: "https://image.tmdb.org/t/p/w500/" + this.movies.poster_path 
         } 
     },
-    // In methods: addToCart sets the cart table to visible and gets the inputs from the form and then sends the info to the array then calls add that is in app instance
+    // In methods: addToCart calls the method in app called addcart
     methods:{
         addToCart(e){
-
-            console.log(e.target);
-            var ticketVal = e.target.parentElement;
-            // console.log(ticketVal[0]);
-            // console.log(ticketVal[1]);
-            var movieName = ticketVal[0].parentElement.parentElement.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.innerHTML;
-            console.log(movieName)
-
-            document.getElementById("empty").style.visibility = "hidden";
-            document.getElementById("empty").style.height = "0px";
-            document.getElementById("table").style.visibility = "visible";
-
-            if (ticketVal[0].valueAsNumber != 0){
-            var Atic = ticketVal[0].valueAsNumber + " x $13.00";
-            } else {
-                var Atic = " ";
-            }
-            if (ticketVal[1].valueAsNumber != 0){
-                var Ctic = ticketVal[1].valueAsNumber + " x $9.00";
-                } else {
-                    var Ctic = " ";
-                }
-
-            var subTo = ticketVal[0].valueAsNumber * 13 + ticketVal[1].valueAsNumber * 9;
-
-            
-            app.ticketObj.push(
-                {
-                    "name": movieName,
-                    "aTicket": Atic,
-                    "cTicket": Ctic,
-                    "sub": subTo
-                }
-            )
-            
-            app.add(ticketVal[0].valueAsNumber, ticketVal[1].valueAsNumber);
-            
+            app.addCart(e)
         }
     }
-
     })
 
 // the apikey for axios call
@@ -192,9 +155,74 @@ const app = new Vue({
             })
     },
     // In Methods: 
+    //  - addCart(): in this method it will run addTicket if all the requirements are met
+    //  - addTicket(): in this method it will add an object to the ticketObj array
     //  - add(): in this method it updates the totalnum array by adding values
+    //  - checkZero(): in this method we check if Atick or Ctick is zero and if so it will set that tag to hidden and if not it will get set to visible 
     //  - deletefromCart(): in this method it updates the total array by subtracting values
     methods:{
+        addCart(e){
+            console.log(e.target);
+            // gets the ticketVal from the element that was clicked on in moviecard component
+            var ticketVal = e.target.parentElement;
+
+            // gets movieName from ticketVal
+            var movieName = ticketVal[0].parentElement.parentElement.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.innerHTML;
+            console.log(movieName)
+            console.log(app.totalnum.length)
+            // if ticketObj equals 0 then it will run addTicket
+            if (this.ticketObj.length == 0){
+                this.addTicket(ticketVal, movieName);
+            }else{ // else it will check if the ticketName is already in the array and if so it wont run addTicket
+                console.log(!(this.ticketObj.includes(movieName)));
+                console.log((this.ticketObj.includes(movieName)));
+                var x = 1;
+                for (i = 0; i < app.ticketObj.length; i++){
+                    if (this.ticketObj[i].name.includes(movieName)){
+                        x = 0;
+                    }
+                }
+                console.log(x)
+
+                if (x == 1){
+                    console.log(this.ticketObj[0].name + " app"),
+                    console.log(movieName);
+                    this.addTicket(ticketVal, movieName);
+                }
+            
+            }
+        },
+        addTicket(ticketVal, movieName){
+            document.getElementById("empty").style.visibility = "hidden";
+            document.getElementById("empty").style.height = "0px";
+            document.getElementById("table").style.visibility = "visible";
+            
+            // checks if Atic does not equals and if so then it sets Atic or Ctic to the number of tickets then X the price
+            if (ticketVal[0].valueAsNumber != 0){
+                var Atic = ticketVal[0].valueAsNumber + " x $13.00";
+            } else {
+                var Atic = " ";
+            }
+            if (ticketVal[1].valueAsNumber != 0){
+                var Ctic = ticketVal[1].valueAsNumber + " x $9.00";
+            } else {
+                var Ctic = " ";
+            }
+            // Calculates the subtotal value
+            var subTo = ticketVal[0].valueAsNumber * 13 + ticketVal[1].valueAsNumber * 9;
+
+            // pushes the new ticket object to the ticketObj array 
+            this.ticketObj.push(
+                {
+                    "name": movieName,
+                    "aTicket": Atic,
+                    "cTicket": Ctic,
+                    "sub": subTo
+                }
+            )
+            // then runs add
+            this.add(ticketVal[0].valueAsNumber, ticketVal[1].valueAsNumber);
+        },
         add(Atotal, Ctotal){
             // to get the full total of all adult and child tickets
             this.Atick =  this.Atick + Atotal;
@@ -216,6 +244,8 @@ const app = new Vue({
                     "total": "$" + Tprice
                 }
             )
+            // then runs checkZero
+            this.checkZero()
 
             console.log(this.Ctick);
             console.log(this.Atick);
@@ -224,6 +254,21 @@ const app = new Vue({
             console.log(this.totalnum);
 
 
+        },
+        checkZero(){
+            // starts out by waiting 10 milliseconds then if Atick or Ctick equals zero then they have a display if hidden
+            setTimeout(() => { 
+                if (this.Atick == 0){
+                    document.getElementById("adult").style.visibility = "hidden";
+                }else{
+                    document.getElementById("adult").style.visibility = "visible";
+                }
+                if (this.Ctick == 0){
+                    document.getElementById("child").style.visibility = "hidden";
+                }else{
+                    document.getElementById("child").style.visibility = "visible";
+                }
+             }, 10);
         },
         deletefromCart(movieText){
             // starts by getting the text form the table row that was removed and spliting it by </td>
@@ -261,6 +306,7 @@ const app = new Vue({
                 document.getElementById("empty").style.height = "36.7833px";
                 document.getElementById("table").style.visibility = "hidden";
             }
+            
 
             // removes the last item in the array (in this case it removes the only thing in the array)
             this.totalnum.pop()
@@ -272,7 +318,8 @@ const app = new Vue({
                     "total": "$" + Tprice
                 }
             )
-
+            // then runs check zero
+            this.checkZero()
             console.log(this.Ctick);
             console.log(this.Atick);
             console.log(this.totals);
