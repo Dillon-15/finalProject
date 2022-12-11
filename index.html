@@ -23,7 +23,8 @@
 </head>
 <body>
     <div id="app">
-        <navbar msg="Your Cart" ></navbar>
+        <navbar></navbar>
+        <sidebar v-bind:msg="msg" v-bind:ticket="ticketObj" aria-hidden="true"></sidebar>
         <div class="container">
             <div class="row row-cols-1 row-cols-md-2 g-4 text-center">
                 <movieCard class="col mx-3" v-for="movie in movies" v-bind:key="movie.id" v-bind:movies="movie"></moviecard>
